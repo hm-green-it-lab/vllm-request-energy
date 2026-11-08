@@ -1,0 +1,274 @@
+{
+  "date": "2026-11-08",
+  "scope": "native software conformance after SDK publication and SGLang hook-pairing review",
+  "sdk": {
+    "repository": "https://github.com/hm-green-it-lab/inference-energy-attributor",
+    "branch": "codex/request-energy-sdk",
+    "tag": "v0.2.1",
+    "revision": "3ebc71bd6c1c128bcd329ee3dd74ec243fcde029",
+    "version": "0.2.1",
+    "wheel": "llm_request_energy-0.2.1-py3-none-any.whl",
+    "wheel_sha256": "ee646d6dc2dd6ec52577acfdcb20ddf3da5b41e641e656b667c0bfb75b16f96d",
+    "historical_prototype_tag": "v0.2.0"
+  },
+  "engine_sources": {
+    "sglang": {
+      "contributor_base": "90c8d408466081a030f1f37ace8021182f66d5c3",
+      "tested_runtime": "39e15857e6341e414e81d726e62a85f67a51c08c"
+    },
+    "vllm": {
+      "base": "2fb5111bbac7a2e31c0c19c1eb0aa01df5ecb664",
+      "tested_runtime": "e2781a8ab8e416f6c4c2a8804a9706354f598d63",
+      "compiled_version": "0.33.0rc1.dev87+g2fb5111bb"
+    }
+  },
+  "tests": {
+    "local_combined": 88,
+    "isolated_wheel_python": "3.12.7",
+    "isolated_wheel_tests": 50,
+    "native_cpu_tests_per_host": 74,
+    "native_cpu_python": "3.12.3",
+    "native_cpu_test_split": {
+      "sdk": 50,
+      "sglang": 24
+    },
+    "vllm_pre_commit": "passed",
+    "source_files_checksum_verified_per_host": 5275,
+    "deployed_source_matches_runtime_commits": true
+  },
+  "case_defaults": {
+    "requests": 8,
+    "concurrency": 4,
+    "warmup_requests": 2,
+    "loaded_idle_seconds": 15,
+    "pre_seconds": 10,
+    "post_seconds": 10,
+    "poll_seconds": 0.1,
+    "policy": "tokens",
+    "eager": true,
+    "tp": 1,
+    "chunk_tokens": 128,
+    "max_context": 4096,
+    "sampling": "greedy",
+    "sglang_attention": "triton",
+    "sglang_sampling": "pytorch"
+  },
+  "cases": [
+    {
+      "host_profile": "rtx",
+      "engine": "vllm",
+      "mode": "vllm",
+      "requests_reconciled": 8,
+      "software_valid": true,
+      "live_replay_byte_identical": true,
+      "gpu_request_estimates_j": [
+        9.926291403544557,
+        9.774991442968407,
+        8.730845130295116,
+        9.450413278244127,
+        10.301187454964603,
+        11.748994748812999,
+        14.431997773428286,
+        17.65127987355016
+      ],
+      "gpu_min_j": 8.730845130295116,
+      "gpu_max_j": 17.65127987355016,
+      "execution_intervals": 184,
+      "execution_work_kinds": [
+        "forward",
+        "sampling"
+      ],
+      "domain_totals": {
+        "gpu": {
+          "idle_unowned_j": 1549.0981044961218,
+          "measured_j": 1671.9748127088471,
+          "other_j": 0.0,
+          "request_j": 92.01600110580826,
+          "unattributed_j": 30.860707106917218
+        },
+        "rapl_package": {
+          "idle_unowned_j": 775.0088297655634,
+          "measured_j": 946.752751,
+          "other_j": 0.0,
+          "request_j": 46.465373213279285,
+          "unattributed_j": 125.27854802115712
+        }
+      },
+      "max_abs_residual_j": 1.4210854715202004e-14,
+      "request_results_sha256": "bb45df4434e8f6ebffec663cdc2f0b59a840ee326a72dd3c76e5bdabf66b5917",
+      "ledger_sha256": "90852a11882ab02148a70af7d5c8167f9630e369bed4b198c40e25925e679af5",
+      "provenance": {
+        "container_digest": "sha256:e78bf907debdbf7f2a99cd1d017c11ee2a6c11ad895ac28b03683d0b5787b8bc",
+        "container_digest_kind": "docker-image-config",
+        "cuda_graph": false,
+        "delayed_sampling": false,
+        "engine": "vllm",
+        "engine_commit": "e2781a8ab8e416f6c4c2a8804a9706354f598d63",
+        "image_reference": "lmsysorg/sglang:v0.5.21",
+        "model_file_sha256": {
+          "config.json": "504a6b58c4271583724e66584b6b7698aea18450209df6b2f7582df0e89cee59",
+          "model.safetensors": "cd2a512003e2f9f3cd3c32a9c3573f820bb28c940f73c57b1ddaa983d9223eba",
+          "tokenizer.json": "c0382117ea329cdf097041132f6d735924b697924d6f6fc3945713e96ce87539",
+          "tokenizer_config.json": "3c04ed3ca964ea2f6b2b5faf0dc4d31aec1cb1e8b4bcf63f402d295046b422b5"
+        },
+        "model_revision": "local-Qwen3-0.6B-Base-file-hashes",
+        "overlap": true,
+        "sdk_version": "0.2.1",
+        "sdk_wheel_sha256": "ee646d6dc2dd6ec52577acfdcb20ddf3da5b41e641e656b667c0bfb75b16f96d",
+        "tp_size": 1,
+        "validation_driver_sha256": "54f22c28ed054e71b2ac50e9a305c65e099f3e6d9f15494012d60c59fddf7d2c"
+      },
+      "native_cross_format_validation": [],
+      "alternative_policy_replays": {
+        "equal": true,
+        "activity": true
+      },
+      "final_delay_seconds": [
+        0.161022414,
+        0.162687065,
+        0.175530487,
+        0.181878024,
+        0.190441582,
+        0.193918595,
+        0.195755527,
+        0.215585155
+      ],
+      "max_observed_final_delay_s": 0.215585155,
+      "coverage_domains": [
+        "gpu",
+        "rapl_package"
+      ]
+    },
+    {
+      "host_profile": "a100",
+      "engine": "vllm",
+      "mode": "vllm",
+      "requests_reconciled": 8,
+      "software_valid": true,
+      "live_replay_byte_identical": true,
+      "gpu_request_estimates_j": [
+        27.594148680301245,
+        17.814322524969068,
+        19.278434790789497,
+        20.780560614423308,
+        19.29352763507699,
+        20.151641387919028,
+        21.985962738886876,
+        25.665707580068197
+      ],
+      "gpu_min_j": 17.814322524969068,
+      "gpu_max_j": 27.594148680301245,
+      "execution_intervals": 182,
+      "execution_work_kinds": [
+        "forward",
+        "sampling"
+      ],
+      "domain_totals": {
+        "gpu": {
+          "idle_unowned_j": 1730.067393155879,
+          "measured_j": 1916.807905504901,
+          "other_j": 0.0,
+          "request_j": 172.56430595243424,
+          "unattributed_j": 14.176206396586645
+        }
+      },
+      "max_abs_residual_j": 1.2434497875801753e-14,
+      "request_results_sha256": "0f7f6b51fd3092e715ec15b2956939d6cc386973452e68bb1bb4718a1479f898",
+      "ledger_sha256": "a08ad31ed34948d399d27f1cdad6fada250dd682258ea6c2cb91cb8ee4bf82ce",
+      "provenance": {
+        "container_digest": "sha256:c76d0e2225a4b1cb1e2109ace39639f55e714abd1a7a427acc8b0bbd7f6a83b3",
+        "container_digest_kind": "docker-image-config",
+        "cuda_graph": false,
+        "delayed_sampling": false,
+        "engine": "vllm",
+        "engine_commit": "e2781a8ab8e416f6c4c2a8804a9706354f598d63",
+        "image_reference": "vllm/vllm-openai:v0.31.0",
+        "model_file_sha256": {
+          "config.json": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+          "model.safetensors": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+          "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+          "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+        },
+        "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+        "overlap": true,
+        "sdk_version": "0.2.1",
+        "sdk_wheel_sha256": "ee646d6dc2dd6ec52577acfdcb20ddf3da5b41e641e656b667c0bfb75b16f96d",
+        "tp_size": 1,
+        "validation_driver_sha256": "54f22c28ed054e71b2ac50e9a305c65e099f3e6d9f15494012d60c59fddf7d2c"
+      },
+      "native_cross_format_validation": [],
+      "alternative_policy_replays": {
+        "equal": true,
+        "activity": true
+      },
+      "final_delay_seconds": [
+        0.065583615,
+        0.095921398,
+        0.10511917,
+        0.109211464,
+        0.135185094,
+        0.149491875,
+        0.159589036,
+        0.183019395
+      ],
+      "max_observed_final_delay_s": 0.183019395,
+      "coverage_domains": [
+        "gpu"
+      ]
+    }
+  ],
+  "output_comparisons": [
+    {
+      "host_profile": "rtx",
+      "concurrency": 4,
+      "differences": [],
+      "engine": "vllm",
+      "output_hashes_and_token_counts_equal": true,
+      "overhead_validated": false,
+      "request_gap_seconds": 0.0,
+      "requests_compared": 8,
+      "scope": "fixed greedy trace-on/off output check; arrival order uncontrolled"
+    },
+    {
+      "host_profile": "a100",
+      "concurrency": 4,
+      "differences": [],
+      "engine": "vllm",
+      "output_hashes_and_token_counts_equal": true,
+      "overhead_validated": false,
+      "request_gap_seconds": 0.0,
+      "requests_compared": 8,
+      "scope": "fixed greedy trace-on/off output check; arrival order uncontrolled"
+    }
+  ],
+  "native_only": [],
+  "local_archive_sha256": {
+    "rtx-review-completed.tar.gz": "faa8eb69568a6c31583d83a29881172d92c5331e5066fd25867e6824dc60ab60",
+    "a100-review-completed.tar.gz": "99e281ecf116cac413cd2e4bdca2874d1c0e54816ee3139ccbb45b9d8eecb09b"
+  },
+  "contributor_tools": {
+    "step_trace_client.py": "928f892584574e586d73be99821d524e8a68afc75bc9dc7cbbbec518faa369a9",
+    "plot_step_trace.py": "31b7ab585c9c1cc93071e00d2dea6c4a7ce2de348093e5fbc6a35e57f5f2feef"
+  },
+  "restoration": {
+    "rtx_original_container_id_image_ports_identical": true,
+    "rtx_health_generate_ready": true,
+    "rtx_preexisting_containers_retained": 15,
+    "a100_public_container_start_unchanged": "2026-10-22T09:32:17.66750089Z",
+    "a100_free_gpu_returned_to_zero_MiB": true
+  },
+  "limits": [
+    "Conservation and live/replay equivalence validate accounting, not physical per-request accuracy.",
+    "Only two short warmups; cold JIT shapes remain possible, including the larger A100 overlap estimates. No engine ranking is inferred.",
+    "RTX sensor averaging uncertainty remains one second despite 100 ms polling. Final-delay values describe modeled result availability.",
+    "RTX has genuine RAPL package coverage, no DRAM domain. CPU cgroup ratio and CPU/DRAM model accuracy are not validated. A100 uses NVML only.",
+    "The second A100 retains its public service; shared-host interference remains possible.",
+    "Native cancellation/preemption, failure injection, CUDA graphs, alternate vLLM runner configurations and TP>1 remain open.",
+    "Accuracy references and paired overhead measurements remain open. hardware_validated and research_ready remain false.",
+    "Current concurrent output comparisons match 8/8 in both engines on both hosts. The historical Nov 2 A100 vLLM difference is retained in the earlier receipt; arbitrary-schedule output invariance is not established.",
+    "Unsupported configuration guards are exercised by CPU tests of actual scheduler dispatch/init methods, not by loading every unsupported native configuration."
+  ],
+  "hardware_validated": false,
+  "research_ready": false,
+  "raw_artifacts": "Private lab exports are retained under energy-runs/2026-11-08-review; archive and plot hashes are recorded without credentials or host addresses."
+}
