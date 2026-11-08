@@ -6,6 +6,18 @@ import os
 import uuid
 
 
+def _sdk():
+    try:
+        from request_energy import instrumentation
+    except ImportError as error:
+        raise RuntimeError(
+            "Tracing requires llm-request-energy in the engine environment. "
+            "Install the tested 0.2.1 wheel from "
+            "https://github.com/hm-green-it-lab/inference-energy-attributor"
+        ) from error
+    return instrumentation
+
+
 class SchedulerEnergyTrace:
     def __init__(self, config):
         self.lifecycle = None
@@ -13,9 +25,7 @@ class SchedulerEnergyTrace:
         self.ranges = {}
         self.config = config
         if os.environ.get("REQUEST_ENERGY_TRACE_DIR"):
-            from request_energy.instrumentation import LifecycleTracer
-
-            self.lifecycle = LifecycleTracer("vllm", "scheduler")
+            self.lifecycle = _sdk().LifecycleTracer("vllm", "scheduler")
         self.session = uuid.uuid4().hex
 
     @staticmethod
@@ -124,9 +134,7 @@ class WorkerEnergyTrace:
         self.tracer = None
         self.context = None
         if os.environ.get("REQUEST_ENERGY_TRACE_DIR"):
-            from request_energy.instrumentation import CudaStepTracer
-
-            self.tracer = CudaStepTracer("vllm", f"worker-{rank}", device=device)
+            self.tracer = _sdk().CudaStepTracer("vllm", f"worker-{rank}", device=device)
 
     def begin_forward(self, output):
         self.context = getattr(output, "request_energy_trace", None)
