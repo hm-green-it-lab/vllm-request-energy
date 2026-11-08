@@ -4,10 +4,30 @@ This research fork can export request lifecycle, scheduled demand and GPU
 execution intervals for the standalone request-energy processor. The default is
 off. vLLM does not poll NVML/RAPL or calculate joules in its scheduler.
 
-Install the matching llm-request-energy **0.2.0** SDK wheel in the engine
-environment, for example using `uv pip install /path/to/the/matching.whl`.
-Build/obtain this development wheel from the independent attribution project;
-it is not assumed to be published on PyPI. Tracing disabled needs no SDK.
+Install the tested llm-request-energy **0.2.1** SDK wheel in the engine
+environment. Source, wheels and checksums are published in
+[inference-energy-attributor](https://github.com/hm-green-it-lab/inference-energy-attributor/tree/codex/request-energy-sdk).
+It is not assumed to be published on PyPI. Tracing disabled needs no SDK.
+
+```bash
+git clone --branch v0.2.1 git@github.com:hm-green-it-lab/inference-energy-attributor.git
+cd inference-energy-attributor
+sha256sum -c artifacts/SHA256SUMS
+uv pip install --python /absolute/path/to/engine-venv/bin/python \
+  artifacts/llm_request_energy-0.2.1-py3-none-any.whl
+```
+
+For source installation, use `uv pip install --python /path/to/engine-venv/bin/python .`
+from the SDK checkout. Install inside the serving container when applicable,
+including all worker environments. The pure Python SDK wheel has no NVML,
+Java or automation dependency and is separate from vLLM's compiled wheel.
+The historical SDK v0.2.0 tag is retained for the earlier prototype.
+
+This fork's base is commit `2fb5111bbac7a2e31c0c19c1eb0aa01df5ecb664`, matching
+compiled vLLM wheel `0.33.0rc1.dev87+g2fb5111bb`. It is not based on vLLM 0.32.0.
+Do not overlay this source on a different compiled release without rebuilding
+and validating engine compatibility. The SDK itself can be installed separately.
+
 Set REQUEST_ENERGY_TRACE_DIR to an existing writable trace location and
 REQUEST_ENERGY_INSTANCE_ID to a unique server-launch ID shared by TP workers.
 The SDK creates a separate append-only file per scheduler/worker producer.
