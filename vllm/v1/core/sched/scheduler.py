@@ -2677,7 +2677,8 @@ class Scheduler(SchedulerInterface):
                 engine_core_outputs[0] = eco = EngineCoreOutputs()
             eco.scheduler_stats = stats
 
-        self._energy_trace.complete(scheduler_output)
+        if scheduler_output.request_energy_trace is not None:
+            self._energy_trace.complete(scheduler_output)
         return engine_core_outputs
 
     def _ec_transfer_pending(self, request: Request, num_computed_tokens: int) -> bool:
