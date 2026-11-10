@@ -1,9 +1,54 @@
 # Native request-energy validation
 
-## Review corrections: 8 November 2026
+## Release port: 10 November 2026
+
+The four feature commits were rebased onto upstream **v0.33.0**, commit
+`4ba787ec9959e566d3b587a796dff07673324da5`, on
+`codex/request-energy-v0.33.0`. The unmodified release is retained as tag
+`v0.33.0` and branch `codex/baseline-v0.33.0`.
+Tested runtime: `5c61df3a2ec5d89c213383e8718e6ec59f139bff`;
+subsequent receipt and install-documentation changes do not alter runtime code.
+Exact provenance and results are in the
+[release-port receipt](request_energy_validation/2026-11-10.json).
+
+There were no textual conflicts. `git range-diff` matched all four original
+feature commits without changes. The release's deferred HiSparse KV-load logic
+and removal of the old locality-resource initialization are preserved. The
+energy snapshot still precedes optimistic token-counter updates; worker CUDA
+brackets still wrap forward and sampling. An additional compatibility fix only
+completes lifecycle holds for outputs carrying a trace payload. This also preserves
+the upstream abort-path tests that intentionally bypass scheduler initialization. Connector/offloading configurations
+remain outside the trusted ownership profile.
+
+Native checks used the official compiled **vLLM 0.33.0** wheel with Torch
+**2.14.0+cu130**, SDK **0.2.1**, and only the four instrumented Python files.
+The original scheduler/output/worker file hashes were checked against the release
+before overlaying. The enclosing container image is an environment provider;
+its v0.31.0 image tag is not the installed engine version.
+
+On the free A100 80GB, Qwen3-0.6B ran with the release-default V2 runner,
+bfloat16, eager execution, TP=1, chunked prefill and prefix caching. All eight
+sequential greedy output hashes and token counts matched the unmodified release.
+The concurrent energy smoke finalized eight explicitly identified requests with
+positive GPU estimates, passed software integrity and conservation, and reproduced
+request results and the interval ledger byte-for-byte through replay.
+The upstream scheduler and async-scheduler suites are tested with
+`VLLM_TARGET_DEVICE=cpu`; the receipt records both baseline and instrumented counts.
+The parent project's energy and meeting suites and this fork's applicable
+pre-commit hooks were also checked.
+
+This is a bounded software-conformance result. The RTX 4090 remained occupied
+by its existing SGLang service; it was not interrupted for this release port.
+The public service on the other A100 remained running. Full Qwen3-8B campaign,
+TP=2, V1 runner, CUDA graphs, cancellation/preemption, physical accuracy and
+overhead validation remain separate gates. `hardware_validated` and
+`research_ready` remain false. Earlier results below retain their original
+bases and do not certify this release.
+
+## Historical review corrections: 8 November 2026
 
 Tested runtime: `e2781a8ab8e416f6c4c2a8804a9706354f598d63`. Exact artifact, image, model and
-result hashes are in the [current receipt](request_energy_validation/2026-11-08.json). Source and wheel
+result hashes are in the [8 November receipt](request_energy_validation/2026-11-08.json). Source and wheel
 **llm-request-energy 0.2.1** are published at
 [inference-energy-attributor v0.2.1](https://github.com/hm-green-it-lab/inference-energy-attributor/tree/v0.2.1).
 Wheel SHA-256: `ee646d6dc2dd6ec52577acfdcb20ddf3da5b41e641e656b667c0bfb75b16f96d`.
