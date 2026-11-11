@@ -1,0 +1,200 @@
+{
+  "date": "2026-11-10",
+  "scope": "vLLM v0.33.0 release port and bounded software conformance",
+  "tested_runtime_revision": "5c61df3a2ec5d89c213383e8718e6ec59f139bff",
+  "rebase": {
+    "previous_base": "2fb5111bbac7a2e31c0c19c1eb0aa01df5ecb664",
+    "previous_feature_tip": "5c2fa98afb7f9af5ff174daa2de0360801d9c1ef",
+    "release_tag": "v0.33.0",
+    "release_tag_object": "3a4d82f569a9f57054ba81633e9b6c73b34b51fe",
+    "release_commit": "4ba787ec9959e566d3b587a796dff07673324da5",
+    "baseline_branch": "codex/baseline-v0.33.0",
+    "feature_branch": "codex/request-energy-v0.33.0",
+    "textual_conflicts": 0,
+    "original_feature_commits_preserved": 4,
+    "range_diff": "All four original commits matched (=) after rebase; one subsequent runtime compatibility fix.",
+    "upstream_changes_preserved": [
+      "HiSparse deferred async KV-load fencing and cleanup in the scheduler",
+      "Removal of pre-load localized-resource initialization in the GPU worker"
+    ],
+    "hook_review": "Demand snapshot remains before optimistic counters; worker brackets still enclose forward and sampling; connector/offloading ownership remains unsupported."
+  },
+  "abort_path_regression": {
+    "before_fix_runtime": "f603c906ed7e2818e3ef2b1237e3ed53c6533535",
+    "before_fix_result": "298 passed, 2 failed",
+    "tests": [
+      "tests/v1/core/test_scheduler.py::test_abort_request_when_structured_output_fsm_cannot_advance",
+      "tests/v1/core/test_async_scheduler.py::test_abort_request_when_structured_output_fsm_cannot_advance"
+    ],
+    "cause": "Upstream abort-path fixtures bypass Scheduler.__init__; untraced outputs invoked the added completion hook without initialized trace state.",
+    "fix": "Invoke lifecycle-hold completion only when SchedulerOutput.request_energy_trace is not None. No tests were weakened or skipped.",
+    "after_fix_focused": "2 passed"
+  },
+  "tests": {
+    "scheduler_files": [
+      "tests/v1/core/test_scheduler.py",
+      "tests/v1/core/test_async_scheduler.py"
+    ],
+    "scheduler_platform": "VLLM_TARGET_DEVICE=cpu",
+    "scheduler_baseline": {
+      "passed": 300,
+      "failed": 0,
+      "skipped": 0
+    },
+    "scheduler_instrumented": {
+      "passed": 300,
+      "failed": 0,
+      "skipped": 0
+    },
+    "scheduler_command": "HF_HOME=/work/hf-home VLLM_TARGET_DEVICE=cpu /work/.venv/bin/python -m pytest -q tests/v1/core/test_scheduler.py tests/v1/core/test_async_scheduler.py --tb=short --maxfail=5",
+    "scheduler_final_additional_environment": "HF_HUB_OFFLINE=1 (all configurations already cached by the baseline run)",
+    "energy": {
+      "command": ".venv/bin/python -m pytest -q tests_energy --tb=short -rs",
+      "passed": 77,
+      "skipped": 0
+    },
+    "meetings": {
+      "command": "PATH=\"$PWD/.conda/meeting-pipeline/bin:$PATH\" .conda/meeting-pipeline/bin/python -m pytest -q Meetings/tests --tb=short",
+      "passed": 93,
+      "deselected": 1
+    },
+    "vllm_pre_commit": "Applicable hooks passed on the changed files, including ruff, mypy, typos and markdownlint.",
+    "paper": {
+      "latexmk_pdf_bibtex": "passed in a clean temporary directory",
+      "pages": 15
+    },
+    "full_vllm_ci_run": false
+  },
+  "native": {
+    "host_profile": "kubgpu01, free A100 80GB PCIe, GPU 0",
+    "kernel": "Linux 6.18.52 x86_64",
+    "driver": "580.178.04",
+    "model": "Qwen/Qwen3-0.6B",
+    "runner": "release-default V2",
+    "eager": true,
+    "tensor_parallel_size": 1,
+    "prefix_caching": true,
+    "note": "The output comparison is trace-on instrumentation versus the unmodified official release. The driver labels this trace-on/off generically. Energy input interval counts include warmup and preceding response-probe records.",
+    "baseline_output_comparison": {
+      "concurrency": 1,
+      "differences": [],
+      "engine": "vllm",
+      "output_hashes_and_token_counts_equal": true,
+      "overhead_validated": false,
+      "request_gap_seconds": 0.0,
+      "requests_compared": 8,
+      "scope": "fixed greedy trace-on/off output check; arrival order uncontrolled"
+    },
+    "concurrent_energy_conformance": {
+      "baseline_calibration_id": "c1aebce202142dfe4b02b985afe2bc8fea1b872c11056426a81c77afbf9378d9",
+      "domain_totals": {
+        "GPU-231437bf-d511-0a90-2123-8cd3f2d71443": {
+          "idle_unowned_j": 1718.0415318230932,
+          "measured_j": 1882.8024257014151,
+          "other_j": 0.0,
+          "request_j": 145.97714418609215,
+          "unattributed_j": 18.783749692230437
+        }
+      },
+      "engine": "vllm",
+      "execution_intervals": 712,
+      "execution_work_kinds": [
+        "forward",
+        "sampling"
+      ],
+      "gpu_energy_j": {
+        "server-probe-a27d471c50ad-0": 14.963371730017316,
+        "server-probe-a27d471c50ad-1": 14.202143326697767,
+        "server-probe-a27d471c50ad-2": 15.429766090655857,
+        "server-probe-a27d471c50ad-3": 16.672901825307452,
+        "server-probe-a27d471c50ad-4": 17.828055284140763,
+        "server-probe-a27d471c50ad-5": 19.292813987967968,
+        "server-probe-a27d471c50ad-6": 21.689625461589138,
+        "server-probe-a27d471c50ad-7": 25.898466479715943
+      },
+      "live_replay_exact": true,
+      "llm_inference_validated": true,
+      "overhead_validated": false,
+      "physical_request_accuracy_validated": false,
+      "provenance": {
+        "base_revision": "4ba787ec9959e566d3b587a796dff07673324da5",
+        "chunk_tokens": 128,
+        "compiled_version": "0.33.0",
+        "container_digest": "sha256:c76d0e2225a4b1cb1e2109ace39639f55e714abd1a7a427acc8b0bbd7f6a83b3",
+        "container_digest_kind": "docker-image-config",
+        "cuda_graph": false,
+        "engine": "vllm",
+        "engine_commit": "5c61df3a2ec5d89c213383e8718e6ec59f139bff",
+        "image_reference": "vllm/vllm-openai:v0.31.0",
+        "max_context": 4096,
+        "model_file_sha256": {
+          "config.json": "660db3b73d788119c04535e48cf9be5f55bc3100841a718637ae695b442f27dd",
+          "model.safetensors": "f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b",
+          "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+          "tokenizer_config.json": "d5d09f07b48c3086c508b30d1c9114bd1189145b74e982a265350c923acd8101"
+        },
+        "model_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+        "note": "Enclosing image only; isolated venv installs the official 0.33.0 wheel and Torch 2.14.0+cu130.",
+        "precision": "bfloat16",
+        "sdk_version": "0.2.1",
+        "sdk_wheel_sha256": "ee646d6dc2dd6ec52577acfdcb20ddf3da5b41e641e656b667c0bfb75b16f96d",
+        "tp_size": 1,
+        "validation_driver_sha256": "54f22c28ed054e71b2ac50e9a305c65e099f3e6d9f15494012d60c59fddf7d2c"
+      },
+      "requests_reconciled": 8,
+      "scope": "real inference software conformance",
+      "software_valid": true
+    },
+    "packages": {
+      "vllm": "0.33.0",
+      "torch": "2.14.0+cu130",
+      "triton": "3.8.0",
+      "llm-request-energy": "0.2.1",
+      "nvidia-ml-py": "13.615.71"
+    },
+    "source": {
+      "base_revision": "4ba787ec9959e566d3b587a796dff07673324da5",
+      "runtime_revision": "5c61df3a2ec5d89c213383e8718e6ec59f139bff",
+      "files": {
+        "v1/core/sched/output.py": {
+          "base_sha256": "f2d5b52a3869472c3c66d31bb0960e9a328d59e7271bc1e2c9d7f3ba72d8c62a",
+          "instrumented_sha256": "6026ea357c5b3d70c74d0e6fa13c48899886d42a0f33fa4f9ba70a05401650a6"
+        },
+        "v1/core/sched/scheduler.py": {
+          "base_sha256": "d76cc22257550972137df9c893505d0bd0f5d482374691e6eca4372772de501a",
+          "instrumented_sha256": "dcb0345356d76115362b97dd53f8ebea142a8fd4a9d504a4f468217743b9bbb9"
+        },
+        "v1/metrics/request_energy.py": {
+          "base_sha256": null,
+          "instrumented_sha256": "ae2aeac07db54435bfd42e4548faa371c87333ed72f25e558763500f4cf94947"
+        },
+        "v1/worker/gpu_worker.py": {
+          "base_sha256": "e46a2659842b5b0238ca5d13ecb4a2dcff91f028493a7117d666edb0785a742c",
+          "instrumented_sha256": "861ad94f57b08cb6a37b7999dc973752e8d3828b0013d8fcb9ec2223a2f1acb7"
+        }
+      }
+    },
+    "physical_request_accuracy_validated": false,
+    "overhead_validated": false,
+    "hardware_validated": false,
+    "research_ready": false
+  },
+  "local_evidence": {
+    "path": "dist/vllm-v0.33.0-port/native-artifacts.tar.gz",
+    "sha256": "b1cb01af47a5b84d0ad1b9be41cb47cbc0f01c4772e5f8dfa6373d7236a09466",
+    "availability": "Retained locally and on the test host; archive is not committed. This receipt is committed."
+  },
+  "service_preservation": {
+    "a100_public_service_start_unchanged": "2026-10-22T09:32:17.66750089Z",
+    "a100_public_service_gpu": 1,
+    "rtx4090": "Occupied by existing SGLang service; no release-port GPU test or service interruption."
+  },
+  "limitations": [
+    "Smoke model is Qwen3-0.6B; the paper campaign uses Qwen3-8B and has not been run here.",
+    "TP=2, V1 runner, CUDA graphs, cancellation/preemption serving cases are not validated by this port.",
+    "No physical per-request accuracy, empirical clock/sensor calibration or overhead result.",
+    "Earlier native receipts retain their original development-base pins and are historical."
+  ],
+  "hardware_validated": false,
+  "research_ready": false
+}
